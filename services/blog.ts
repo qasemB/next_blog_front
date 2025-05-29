@@ -16,4 +16,12 @@ export const getBlogByIdService = async (id: string) => {
     return data as Blog;
 };
 
+export const getBlogsByCategoryService = async (categoryId: string) => {
+    const res = await fetch(`http://localhost:4004/api/articles?categoryId=${categoryId}`, {
+        cache: 'no-store'
+    });
+    const data = await res.json();
+    return data as Blog[];
+};
+
 

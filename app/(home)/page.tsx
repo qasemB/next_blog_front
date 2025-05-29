@@ -1,10 +1,5 @@
-'use client';
-
 import { getBlogsService } from '../../services/blog';
 import { getCategoriesService } from '../../services/category';
-import { useState, useEffect } from 'react';
-import { Blog } from '@/types/blog';
-import { Cattegory } from '@/types/category';
 
 // Import components
 import Navbar from './_partials/Navbar';
@@ -14,26 +9,15 @@ import Categories from './_partials/Categories';
 import FeaturedBlogs from './_partials/FeaturedBlogs';
 import Footer from './_partials/Footer';
 
-export default function Home() {
-  const [blogs, setBlogs] = useState<Blog[]>([]);
-  const [categories, setCategories] = useState<Cattegory[]>([]);
+// Force dynamic rendering (SSR)
+export const dynamic = 'force-dynamic';
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [blogsData, categoriesData] = await Promise.all([
-          getBlogsService(),
-          getCategoriesService()
-        ]);
-        setBlogs(blogsData);
-        setCategories(categoriesData);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
+export default async function Home() {
+  // دریافت داده‌ها در سمت سرور
+  const [blogs, categories] = await Promise.all([
+    getBlogsService(),
+    getCategoriesService()
+  ]);
   
   // نمایش فقط 6 مقاله اول
   const featuredBlogs = blogs.slice(0, 6);

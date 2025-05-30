@@ -6,9 +6,9 @@ import Image from 'next/image';
 import { FaArrowLeft, FaCalendarAlt, FaUser } from 'react-icons/fa';
 
 interface CategoryPageProps {
-  params: {
+  params: Promise<{
     categoryId: string;
-  };
+  }>;
 }
 
 // Force dynamic rendering
@@ -16,9 +16,12 @@ export const dynamic = 'force-dynamic';
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
   try {
+    // Await params before using its properties
+    const { categoryId } = await params;
+    
     const [blogs, category] = await Promise.all([
-      getBlogsByCategoryService(params.categoryId),
-      getCategoryByIdService(params.categoryId)
+      getBlogsByCategoryService(categoryId),
+      getCategoryByIdService(categoryId)
     ]);
 
     return (

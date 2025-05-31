@@ -59,6 +59,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     checkAuth();
+    //eslint-disable-next-line
   }, []);
 
   return (

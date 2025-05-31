@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Navbar from "./(home)/_partials/Navbar";
-import Footer from "./(home)/_partials/Footer";
 import { getCategoriesService } from "@/services/category";
+import { AuthProvider } from "@/contexts/AuthContext";
+import LayoutContent from "./LayoutContent";
 
 export const metadata: Metadata = {
   title: "وبلاگ من",
@@ -20,9 +20,11 @@ export default async function RootLayout({
   return (
     <html lang="fa" dir="rtl">
       <body>
-        <Navbar />
-        <main>{children}</main>
-        <Footer categories={categories} />
+        <AuthProvider>
+          <LayoutContent categories={categories}>
+            {children}
+          </LayoutContent>
+        </AuthProvider>
       </body>
     </html>
   );

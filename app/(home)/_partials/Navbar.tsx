@@ -11,11 +11,16 @@ import {
   FaTimes,
   FaFacebook,
   FaTwitter,
-  FaInstagram
+  FaInstagram,
+  FaUser,
+  FaSignInAlt,
+  FaSignOutAlt
 } from 'react-icons/fa';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function Navbar() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { user, logout, isLoading } = useAuth();
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -23,6 +28,11 @@ export default function Navbar() {
 
   const closeSidebar = () => {
     setIsSidebarOpen(false);
+  };
+
+  const handleLogout = () => {
+    logout();
+    closeSidebar();
   };
 
   return (
@@ -56,6 +66,35 @@ export default function Navbar() {
                 <FaPhone />
                 تماس با ما
               </Link>
+              
+              {/* بخش احراز هویت */}
+              {!isLoading && (
+                <div className="flex items-center gap-3 mr-4 pr-4 border-r border-gray-200">
+                  {user ? (
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2 text-gray-700">
+                        <FaUser className="text-blue-600" />
+                        <span className="font-medium">{user.username}</span>
+                      </div>
+                      <button
+                        onClick={handleLogout}
+                        className="flex items-center gap-2 text-gray-700 hover:text-red-600 transition-colors"
+                      >
+                        <FaSignOutAlt />
+                        خروج
+                      </button>
+                    </div>
+                  ) : (
+                    <Link 
+                      href="/auth/login" 
+                      className="flex items-center gap-2 text-gray-700 hover:text-blue-600 transition-colors"
+                    >
+                      <FaSignInAlt />
+                      ورود
+                    </Link>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* دکمه همبرگر موبایل */}
@@ -137,6 +176,38 @@ export default function Navbar() {
                 <span className="font-medium">تماس با ما</span>
               </Link>
             </li>
+            
+            {/* بخش احراز هویت در سایدبار */}
+            {!isLoading && (
+              <>
+                <li className="border-t border-gray-200 pt-4 mt-4">
+                  {user ? (
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-3 text-gray-700 p-3 bg-blue-50 rounded-lg">
+                        <FaUser className="text-blue-600 text-lg" />
+                        <span className="font-medium">{user.username}</span>
+                      </div>
+                      <button
+                        onClick={handleLogout}
+                        className="w-full flex items-center gap-3 text-gray-700 hover:text-red-600 hover:bg-red-50 p-3 rounded-lg transition-all duration-200"
+                      >
+                        <FaSignOutAlt className="text-lg" />
+                        <span className="font-medium">خروج</span>
+                      </button>
+                    </div>
+                  ) : (
+                    <Link 
+                      href="/auth/login" 
+                      onClick={closeSidebar}
+                      className="flex items-center gap-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 p-3 rounded-lg transition-all duration-200"
+                    >
+                      <FaSignInAlt className="text-lg" />
+                      <span className="font-medium">ورود</span>
+                    </Link>
+                  )}
+                </li>
+              </>
+            )}
           </ul>
         </nav>
 
